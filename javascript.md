@@ -4,7 +4,7 @@
 
 ### Typing
 
-- Java, C, OCaml are **statically typed**: the type of a variable is known at compile time. In Java, C, etc. variable types are _explcitly specified_ while in OCaml the types are _inferred_
+- Java, C, OCaml are **statically typed**: the type of a variable is known at compile time. In Java, C, etc. variable types are _explicitly specified_ while in OCaml the types are _inferred_
   - Examples: C, C++, Java, Rust, Go, Scala, OCaml, Kotlin
 - JavaScript is **dynamically typed**: types are associated with runtime values, not named variables/fields
 
@@ -12,11 +12,13 @@
 
 - Variables declared globally (outside any function) have **global scope**
 - Variables declared in a function have scope inside that function (**local/function scope**)
-  - This applies to `var` and `let`
-- <ins>Variables declared with `var` inside `{ }` can be accessed from outside the block</ins>
-- Variables declared with `let` inside `{ }` _cannot_ be accessed from outside the block: they have **block scope**
+  - `var` and `let`
+  - Variables declared with `var` inside `{ }` can be accessed from outside the block
+- `let` vars inside `{ }` _cannot_ be accessed from outside the block: they have **block scope**
 - `const` defines a constant _reference to a value_
   - We cannot change constant primitive values, but we can change/add properties of constant objects
+  - Semantically, tells you that this variable won't change values
+- <ins>ES6: should only be using `let` and `const`</ins>
 
 ### Syntactic sugar
 
@@ -33,17 +35,16 @@
 
 ### Variables
 
-- Defined with `var` no matter the type (incl. arrays)
+- Defined with `let` or `const` no matter the type (incl. arrays)
 - A variable that is called but never defined is `not defined`, but its _type_ is `undefined`
 
-### Hoisting
+##### Hoisting
 
-- **Hoisting**: using a var/function before it's declared, in the code
+- Using a var/function before it's declared, in the code
 - Vars declared with `let` and `const` are not hoisted
 - Only _declarations_ are hoisted, NOT _initializations_!
 - Only functions, and not function expressions are hoisted
 - These examples give different results:
-
   ```
   // Example 1
   var x = 5;
@@ -64,11 +65,11 @@
 
 ### Arrays
 
-- Add obj to an array using `.push(obj)`
-- Reverse an array using `.reverse()`
-- Empty an array by setting the `.length` to 0
+- Add obj to an array using `arr.push(obj)`
+- Reverse an array using `arr.reverse()`
+- Empty an array by setting `arr.length = 0`
 - Check to see if it's an array using `Array.isArray(obj)`
-- Higher order iterator functions: `myArr.map(myFunc)`, `filter()`, `reduce()` (fold left), `reduceRight()` (fold right), `every()` (for all), `some()` (exists)
+- Higher order iterator functions: `myArr.map(myFunc)`, `.filter()`, `.reduce()` (fold left), `.reduceRight()` (fold right), `.every()` (for all), `.some()` (exists)
 
 ### Maps
 
@@ -87,6 +88,7 @@
 
 ### Spread attributes
 
+- Spread operator: `...`
 - _"Spread"_ the given function; expands an array to a list of elements (e.g. as arguments for function calls), or a list of elements to an array
   ```
   let nums = [1, 2, 3];             // Array
@@ -97,26 +99,26 @@
 ### Loops
 
 - `for` and `while` loops are pretty standard
-- **For each** loops: available only in Arrays, Maps, Sets. Takes a callback function and invokes it once for each array element. Callback can access index and value of array elements
+- **`forEach`** loops: available only in Arrays, Maps, Sets. Takes a callback function and invokes it once for each array element. Callback can access index and value of array elements
   ```
   var numbers = [1, 2, 3, 4, 5];
   numbers.forEach((number) => {
       ...
   })
   ```
-- **For in**: loop thru _**enumerable properties** of an object_. Can access keys of object, but not values. Works for arrays and even strings
-  ```
-  for (let prop in obj)
-  ```
-- **For of**: new in ES6; for iterating collections, like Arrays, Maps, etc.
+- **`for of`**: new in ES6; for iterating collections, like Arrays, Maps, etc.
   ```
   for (let var of iterableObj)
+  ```
+- **`for in`**: loop thru _**enumerable properties** of an object_. Can access keys of object, but not values. Works for arrays and even strings
+  ```
+  for (let prop in obj)
   ```
 
 ### Conditionals
 
 - `if` statements are the same as in Java
-- **`switch` statements**:
+- **`switch`** statements:
   ```
   var name = 'Jeremy';
   switch(name) {
@@ -134,7 +136,7 @@
 
 ### Functions
 
-- Functions return `undefined` unless specified otherwise
+- *Functions return `undefined` unless specified otherwise*
 - Can have _default values_, e.g. `function name(param1 = 56, param2) { ... }`
 - Function **declaration**:
   - Defined at parse time
@@ -155,7 +157,7 @@
 
 #### Arrow function expressions
 
-- shorter syntax for function expressions
+- Shorter syntax for function expressions
   - Can't use `this`; they use the `this` of the scope in which the object enclosing them is defined
     - Don't use arrow functions as object methods
   - Not hoisted
@@ -183,17 +185,37 @@
   - Delete properties from an object using `delete prop1`
     - Doesn't work for prototype properties
 
-#### Classes
+### Prototype-based inheritance
+
+- _Doesn't have a class implementation like Java or C++_
+  - `class` keyword in ES6 is syntactical sugar
+- Inheritance has only one construct, **objects**. Think of an object as a bag of properties
+  - Each object has a **prototype**, a private property that holds a link to another object. 
+  - Goes on etc. until an object is reached with `null` as its prototype
+  - `null` has no prototype and is the final link in the **prototype chain**
+  ```
+  function boogie(){}
+  boogie.prototype.foo = "bar";
+  const myBoogie = new boogie();
+  myBoogie.prop = "some value";
+  console.log(myBoogie);
+  
+  // returns the following:
+
+  prop: "some value"
+  <prototype>: {…}
+    constructor: function boogie()
+    foo: "bar"
+  ```
+
+- No "methods", rather can add functions to an object in the form of a property
+
+#### "Classes"
 
 - Class declarations are not hoisted
 - Constructor made with `constructor()`
 - `static` methods exist
-- Syntactic sugar for **prototype-based inheritance**
-
-##### Prototype-based inheritance
-
--
-
+ 
 ### Event loop
 
 - **Event loop**: JS is single-threaded, but it can "fake" concurrency
